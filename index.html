@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>PA Lecture 5: RCA — II · Case Study — Pre-Read</title>
+<style>
+  :root{
+    --page:#F8FAFC; --card:#FFFFFF; --section:#F1F5F9;
+    --primary:#6366F1; --hover:#4338CA; --wash:#EEF2FF;
+    --blue:#0EA5E9; --growth:#10B981; --caution:#F59E0B; --alert:#EF4444; --secondary:#8B5CF6;
+    --h:#0F172A; --body:#1E293B; --muted:#64748B; --faint:#94A3B8;
+    --border:#E2E8F0; --border-strong:#CBD5E1;
+    box-sizing:border-box;
+    padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+  }
+  *,*::before,*::after{box-sizing:border-box}
+  html{scroll-behavior:smooth; scroll-padding-top:env(safe-area-inset-top,0px)}
+  body{margin:0; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    background:var(--page); color:var(--body); line-height:1.6; -webkit-font-smoothing:antialiased}
+  .wrap{max-width:860px; margin:0 auto; padding:0 20px 80px}
+
+  /* HERO */
+  .hero{background:linear-gradient(135deg,var(--primary),var(--hover)); color:#fff;
+    border-radius:0 0 28px 28px; padding:48px 28px 40px; margin-bottom:32px;
+    box-shadow:0 12px 30px -12px rgba(99,102,241,.5)}
+  .hero-inner{max-width:860px; margin:0 auto}
+  .kicker{display:inline-block; font-size:12px; font-weight:700; letter-spacing:.14em;
+    text-transform:uppercase; background:rgba(255,255,255,.18); padding:6px 12px; border-radius:999px; margin-bottom:16px}
+  .hero h1{margin:0 0 8px; font-size:clamp(26px,5vw,38px); font-weight:800; line-height:1.15}
+  .hero .sub{margin:0; font-size:clamp(15px,2.6vw,18px); opacity:.92; font-weight:400; max-width:640px}
+  .hero .meta{margin-top:20px; display:flex; flex-wrap:wrap; gap:10px}
+  .chip{font-size:12px; font-weight:600; background:rgba(255,255,255,.14);
+    border:1px solid rgba(255,255,255,.25); padding:6px 12px; border-radius:8px}
+
+  section{margin:0 0 36px}
+  .sec-label{display:flex; align-items:center; gap:10px; font-size:13px; font-weight:700;
+    letter-spacing:.1em; text-transform:uppercase; color:var(--primary); margin:0 0 6px}
+  .sec-label::before{content:""; width:26px; height:3px; background:var(--primary); border-radius:2px}
+  h2.sec-title{margin:0 0 18px; font-size:clamp(20px,3.6vw,26px); font-weight:800; color:var(--h)}
+  .sec-intro{color:var(--muted); font-style:italic; margin:-8px 0 20px; font-size:15px}
+
+  /* CASE FILE */
+  .case{background:var(--card); border:1px solid var(--border); border-radius:20px;
+    overflow:hidden; box-shadow:0 8px 24px -14px rgba(15,23,42,.25)}
+  .case-top{background:#0F172A; color:#fff; padding:20px 24px; display:flex; align-items:center; gap:14px}
+  .case-badge{font-size:26px; line-height:1}
+  .case-top .cf{font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:#94A3B8; font-weight:700}
+  .case-top .ct{font-size:19px; font-weight:800; letter-spacing:.02em}
+  .case-top .dom{margin-left:auto; font-size:11px; font-weight:700; color:#c7d2fe;
+    background:rgba(99,102,241,.25); border:1px solid rgba(99,102,241,.5); padding:5px 10px; border-radius:8px}
+  .case-body{padding:24px}
+  .block-h{font-size:12px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); margin:0 0 8px}
+  .block-h.red{color:var(--alert)} .block-h.grn{color:var(--growth)}
+  .setup-p{margin:0 0 22px; font-size:15.5px; color:var(--body)}
+  .ev{list-style:none; padding:0; margin:0 0 22px}
+  .ev li{position:relative; padding:6px 0 6px 26px; font-size:14.5px; color:var(--body)}
+  .ev li::before{content:""; position:absolute; left:4px; top:14px; width:8px; height:8px;
+    background:var(--blue); border-radius:2px; transform:rotate(45deg)}
+  .mystery{background:var(--wash); border-left:4px solid var(--primary); border-radius:0 12px 12px 0;
+    padding:16px 18px; margin:0 0 22px; font-size:16px; font-weight:600; color:var(--hover); font-style:italic}
+  .moves{display:grid; gap:10px; margin-bottom:8px}
+  .move-hint{font-size:13px; color:var(--muted); font-style:italic; margin:0 0 12px}
+  .move{display:flex; align-items:flex-start; gap:12px; text-align:left; width:100%;
+    background:var(--card); border:1.5px solid var(--border); border-radius:12px; padding:14px 16px;
+    font:inherit; color:var(--body); cursor:pointer; transition:all .18s}
+  .move:hover{border-color:var(--primary); background:var(--wash); transform:translateY(-1px)}
+  .move-box{flex:none; width:20px; height:20px; border:2px solid var(--border-strong);
+    border-radius:6px; margin-top:1px; transition:all .18s; position:relative}
+  .move.chosen .move-box{background:var(--primary); border-color:var(--primary)}
+  .move.chosen .move-box::after{content:"\2713"; position:absolute; inset:0; color:#fff;
+    font-size:13px; font-weight:800; display:flex; align-items:center; justify-content:center}
+  .move-label{font-size:14.5px; font-weight:500}
+  .move.chosen{border-color:var(--primary); background:var(--wash)}
+  .move.dim{opacity:.5}
+  .reveal{margin-top:14px; background:var(--section); border:1px dashed var(--border-strong);
+    border-radius:12px; padding:0 16px; max-height:0; overflow:hidden; transition:all .3s; opacity:0}
+  .reveal.show{max-height:240px; opacity:1; padding:14px 16px; margin-top:14px}
+  .reveal .rl{font-size:11px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:var(--secondary); margin:0 0 6px}
+  .reveal p{margin:0; font-size:14px; color:var(--body)}
+
+  /* LOCKED CLUE */
+  .clue{margin-top:20px; border-radius:14px; overflow:hidden; border:1px solid var(--border)}
+  .clue-btn{width:100%; display:flex; align-items:center; gap:12px; background:var(--section);
+    border:none; padding:16px 18px; font:inherit; cursor:pointer; color:var(--muted); font-weight:700;
+    font-size:13px; letter-spacing:.06em; text-transform:uppercase; transition:background .18s}
+  .clue-btn:hover{background:#e6ebf2}
+  .clue-btn .lock{font-size:16px}
+  .clue-btn .hintr{margin-left:auto; font-size:11px; font-weight:600; text-transform:none; letter-spacing:0; color:var(--faint)}
+  .clue-body{max-height:0; overflow:hidden; transition:max-height .35s; background:var(--wash)}
+  .clue-body.open{max-height:320px}
+  .clue-body-inner{padding:18px 20px}
+  .clue-body-inner p{margin:0 0 10px; font-size:14.5px; color:var(--hover); font-style:italic}
+  .clue-body-inner p:last-child{margin:0}
+  .mission{display:block; margin-top:12px; font-weight:700; font-style:normal; color:var(--hover)}
+
+  /* TOPICS */
+  .topics{display:grid; gap:10px}
+  .topic{text-align:left; width:100%; background:var(--card); border:1px solid var(--border);
+    border-radius:14px; padding:0; font:inherit; cursor:pointer; overflow:hidden; transition:border-color .18s}
+  .topic:hover{border-color:var(--border-strong)}
+  .topic[aria-expanded="true"]{border-color:var(--primary)}
+  .topic-head{display:flex; align-items:center; gap:14px; padding:16px 18px}
+  .topic-num{flex:none; font-size:13px; font-weight:800; color:var(--primary); background:var(--wash);
+    width:34px; height:34px; border-radius:9px; display:flex; align-items:center; justify-content:center}
+  .topic-name{font-size:15.5px; font-weight:700; color:var(--h); flex:1}
+  .chev{flex:none; font-size:22px; color:var(--primary); font-weight:400; transition:transform .22s; line-height:1}
+  .topic[aria-expanded="true"] .chev{transform:rotate(45deg)}
+  .topic-body{max-height:0; overflow:hidden; transition:max-height .28s}
+  .topic[aria-expanded="true"] .topic-body{max-height:260px}
+  .topic-body p{margin:0; padding:0 18px 18px 66px; font-size:14.5px; color:var(--body)}
+
+  /* USE CASES */
+  .uses{display:grid; gap:12px}
+  .uc{display:flex; gap:14px; background:var(--card); border:1px solid var(--border);
+    border-radius:12px; padding:16px 18px}
+  .uc-dot{flex:none; width:10px; height:10px; border-radius:50%; background:var(--growth); margin-top:7px}
+  .uc strong{display:block; color:var(--h); font-size:14.5px; margin-bottom:3px}
+  .uc span{font-size:14px; color:var(--body)}
+
+  /* PREREQ */
+  .prereqs{display:grid; gap:0; background:var(--card); border:1px solid var(--border); border-radius:14px; overflow:hidden}
+  .pq{display:grid; grid-template-columns:200px 1fr; gap:0; border-bottom:1px solid var(--border)}
+  .pq:last-child{border-bottom:none}
+  .pq-t{padding:16px 18px; font-weight:700; font-size:14px; color:var(--h); background:var(--section)}
+  .pq-r{padding:16px 18px; font-size:14px; color:var(--body)}
+  @media(max-width:640px){.pq{grid-template-columns:1fr} .pq-t{border-bottom:1px solid var(--border)}}
+
+  /* SETUP */
+  .setup-card{background:var(--card); border:1px solid var(--border); border-radius:16px; padding:8px 20px 20px}
+  .setup-item{display:flex; align-items:flex-start; gap:14px; padding:14px 0; border-bottom:1px solid var(--border); cursor:pointer}
+  .setup-item:last-child{border-bottom:none}
+  .setup-item input{position:absolute; opacity:0; width:0; height:0}
+  .chk{flex:none; width:24px; height:24px; border:2px solid var(--border-strong); border-radius:7px;
+    margin-top:1px; transition:all .18s; position:relative}
+  .setup-item input:checked + .chk{background:var(--growth); border-color:var(--growth)}
+  .setup-item input:checked + .chk::after{content:"\2713"; position:absolute; inset:0; color:#fff;
+    font-weight:800; font-size:15px; display:flex; align-items:center; justify-content:center}
+  .setup-text{font-size:14.5px; color:var(--body); transition:all .18s}
+  .setup-item input:checked ~ .setup-text{color:var(--faint); text-decoration:line-through}
+  .progress{margin:16px 0 4px; height:8px; background:var(--section); border-radius:99px; overflow:hidden}
+  .progress-bar{height:100%; width:0; background:linear-gradient(90deg,var(--growth),#34d399); border-radius:99px; transition:width .3s}
+  .progress-txt{font-size:13px; color:var(--muted); font-weight:600; text-align:right; margin-top:6px}
+
+  footer{text-align:center; color:var(--faint); font-size:12.5px; margin-top:48px; padding-top:24px; border-top:1px solid var(--border)}
+</style>
+</head>
+<body>
+  <div class="hero">
+    <div class="hero-inner">
+      <span class="kicker">Product Analytics · Pre-Read</span>
+      <h1>Lecture 5: RCA — II · Case Study</h1>
+      <p class="sub">Same RCA method as last week — now hands-on, with 6,745 Uber ride requests and Python.</p>
+      <div class="meta">
+        <span class="chip">🎯 4 sections · 1 case file</span>
+        <span class="chip">⏱ ~10 min before class</span>
+        <span class="chip">✅ Prereq: RCA — I</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap">
+
+    <section>
+      <p class="sec-label">Section 1</p>
+      <h2 class="sec-title">What's Happening in This Lecture</h2>
+      <p class="sec-intro">Here's a sneak peek at everything we cover today, and why each one is worth showing up for.</p>
+
+      <div class="case">
+        <div class="case-top">
+          <span class="case-badge">🕵️</span>
+          <div>
+            <div class="cf">The Analyst Files · Case #05</div>
+            <div class="ct">THE VANISHING CABS</div>
+          </div>
+          <span class="dom">Ride-Hailing</span>
+        </div>
+        <div class="case-body">
+          <p class="block-h">Setup</p>
+          <p class="setup-p">You're a Product Analyst on an Uber-style platform. Complaints flood the City–Airport corridor: riders can't find cabs, drivers who accept then cancel. The supply-demand gap bleeds goodwill and revenue. You've been handed a notebook with 6,745 ride requests and told to find the root cause.</p>
+
+          <p class="block-h">Evidence</p>
+          <ul class="ev"><li>Cancellation and non-availability cluster on City → Airport and Airport → City routes.</li><li>The problem appears at specific times of day — but no one has quantified exactly when.</li><li>Complaints differ: drivers cite unprofitable return trips; riders cite long wait times.</li></ul>
+
+          <p class="block-h red">The Mystery</p>
+          <p class="mystery">Before you run a single line of Python — what's your first hypothesis, and how would you test it against the data?</p>
+
+          <p class="block-h grn">Make Your Move</p>
+          <p class="move-hint">Choose your first move before continuing. There's no need to know the answer yet — tap an option to see why it's worth considering.</p>
+          <div class="moves">
+        <button class="move" data-reveal="A satisfaction hypothesis — testable if the data has ratings. Today you'll see how to confirm or eliminate it with a groupby.">
+          <span class="move-box" aria-hidden="true"></span>
+          <span class="move-label">A. Poor route ratings are driving cancellations.</span>
+        </button>
+        <button class="move" data-reveal="A sharp hypothesis you can test directly by extracting hour-of-day. Feature engineering turns this hunch into evidence.">
+          <span class="move-box" aria-hidden="true"></span>
+          <span class="move-label">B. The shortage is time-of-day specific — likely peak airport hours.</span>
+        </button>
+        <button class="move" data-reveal="An internal-cause hypothesis worth ruling out. The CRIED spine tells you where in the sequence to check it.">
+          <span class="move-box" aria-hidden="true"></span>
+          <span class="move-label">C. An app update changed matching and deprioritised airport rides.</span>
+        </button>
+        <button class="move" data-reveal="A mechanism-level hypothesis, not just an observation. Notice the difference between a direct cause and a root cause — today's key distinction.">
+          <span class="move-box" aria-hidden="true"></span>
+          <span class="move-label">D. The root cause is the empty return trip — no fare back from the airport.</span>
+        </button></div>
+          <div class="reveal" id="reveal">
+            <p class="rl">Why this move</p>
+            <p id="reveal-text"></p>
+          </div>
+
+          <div class="clue">
+            <button class="clue-btn" id="clue-btn">
+              <span class="lock">🔒</span><span>Clue Locked</span>
+              <span class="hintr">tap to unlock →</span>
+            </button>
+            <div class="clue-body" id="clue-body">
+              <div class="clue-body-inner">
+                <p>One of these is the root cause — but you shouldn't guess. You should test each against the data.</p><p>Feature engineering, EDA, and segmentation together confirm or kill each hypothesis. Same CRIED spine — now on a real, messy dataset.</p>
+                <span class="mission">🎯 Your mission: come to class with a first move in mind.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <p class="sec-label" style="margin-top:8px">Topic Preview</p>
+      <h2 class="sec-title">What You'll Learn</h2>
+      <p class="sec-intro">Tap any topic to see what it covers and why it matters.</p>
+      <div class="topics">
+        <button class="topic" aria-expanded="false">
+          <div class="topic-head"><span class="topic-num">01</span><span class="topic-name">Problem &amp; Assumptions</span><span class="chev">+</span></div>
+          <div class="topic-body"><p>Clarify what “supply-demand gap” means in data terms before analysis. What's a cancellation? What defines the route? These shape every query.</p></div>
+        </button>
+        <button class="topic" aria-expanded="false">
+          <div class="topic-head"><span class="topic-num">02</span><span class="topic-name">Exploratory Analysis</span><span class="chev">+</span></div>
+          <div class="topic-body"><p>First pass over 6,745 records — request-type distribution, cancellation rate by route, time-of-day patterns. Look before you conclude.</p></div>
+        </button>
+        <button class="topic" aria-expanded="false">
+          <div class="topic-head"><span class="topic-num">03</span><span class="topic-name">Feature Engineering</span><span class="chev">+</span></div>
+          <div class="topic-body"><p>Create new columns: hour-of-day from timestamps, route direction, peak vs. off-peak flags. Derived features make hidden patterns visible.</p></div>
+        </button>
+        <button class="topic" aria-expanded="false">
+          <div class="topic-head"><span class="topic-num">04</span><span class="topic-name">In-depth Analysis</span><span class="chev">+</span></div>
+          <div class="topic-body"><p>Drill into the segments EDA surfaced — cancellation by time slot, driver tier, pickup zone. Where hypotheses get confirmed or eliminated.</p></div>
+        </button>
+        <button class="topic" aria-expanded="false">
+          <div class="topic-head"><span class="topic-num">05</span><span class="topic-name">Direct vs. Root Causes</span><span class="chev">+</span></div>
+          <div class="topic-body"><p>A direct cause is what you observe (drivers cancel). A root cause is why (empty return trip makes airport rides unprofitable at night). Getting this right decides whether your fix works.</p></div>
+        </button>
+        <button class="topic" aria-expanded="false">
+          <div class="topic-head"><span class="topic-num">06</span><span class="topic-name">Recommendations</span><span class="chev">+</span></div>
+          <div class="topic-body"><p>Translate the root cause into fixes — return-trip surge, dedicated airport pools, pre-booking incentives. A good recommendation traces straight back to the diagnosis.</p></div>
+        </button>
+        <button class="topic" aria-expanded="false">
+          <div class="topic-head"><span class="topic-num">07</span><span class="topic-name">Competitor Analysis</span><span class="chev">+</span></div>
+          <div class="topic-body"><p>CRIED's “External” step: are Ola/Rapido seeing the same pattern? If not, the cause is internal; if so, it may be structural to the route or city.</p></div>
+        </button></div>
+    </section>
+
+    <section>
+      <p class="sec-label">Section 2</p>
+      <h2 class="sec-title">Real-World Use Cases</h2>
+      <div class="uses"><div class="uc"><div class="uc-dot"></div><div><strong>Exploratory Analysis</strong><span>Before Airbnb investigates a booking-rate drop, it runs an identical first pass — distribution by market, property type, booking window — to define the shape before the deep dive.</span></div></div><div class="uc"><div class="uc-dot"></div><div><strong>Feature Engineering</strong><span>A logistics platform extracted “hours-since-last-delivery” and found driver fatigue past the 8-hour mark tripled cancellations. That feature didn't exist in raw data.</span></div></div><div class="uc"><div class="uc-dot"></div><div><strong>Direct vs. Root Cause</strong><span>A food app saw late-delivery spikes (direct cause). The root cause — found via feature engineering — was orders concentrated in a postal code with no dark kitchen nearby.</span></div></div><div class="uc"><div class="uc-dot"></div><div><strong>Data-driven Recommendations</strong><span>Uber's real “Airport mode” let drivers opt into airport queues with guaranteed return matching — a data-driven root cause turned into a product feature.</span></div></div><div class="uc"><div class="uc-dot"></div><div><strong>Competitor Analysis</strong><span>When Swiggy saw delivery time rise in Tier-2 cities and Zomato didn't, that told them the cause was internal (partner allocation), not external (traffic).</span></div></div></div>
+    </section>
+
+    <section>
+      <p class="sec-label">Section 3</p>
+      <h2 class="sec-title">Prerequisites to Refresh</h2>
+      <p class="sec-intro">Make sure these from RCA — I are fresh — today applies the same life cycle to a real dataset; the reasoning becomes code.</p>
+      <div class="prereqs"><div class="pq"><div class="pq-t">RCA Life Cycle (CRIED)</div><div class="pq-r">Clarify → Rule Out → Internal → External → Diagnose → Conclude. Every step maps to a section of today's notebook.</div></div><div class="pq"><div class="pq-t">Pandas groupby &amp; aggregation</div><div class="pq-r">Cancellation rate by route (groupby + count + divide) and by hour-of-day are the two most common operations today. Warm up with one groupby.</div></div><div class="pq"><div class="pq-t">Filtering &amp; segmentation</div><div class="pq-r">The in-depth analysis slices by route, time slot, and driver status at once. Multi-condition filtering is the core tool — be comfortable with it.</div></div><div class="pq"><div class="pq-t">Direct vs. root cause</div><div class="pq-r">Today formalizes a concept from RCA — I: what you see is usually a direct cause; the root cause is one level deeper.</div></div></div>
+    </section>
+
+    <section>
+      <p class="sec-label">Section 4</p>
+      <h2 class="sec-title">Before Class: Environment Setup</h2>
+      <p class="sec-intro">Dataset required. Complete setup before class:</p>
+      <div class="setup-card">
+        <label class="setup-item"><input type="checkbox"><span class="chk"></span><span class="setup-text">Dataset: <a href="https://drive.google.com/file/d/1ZhqCqM5xtMNsun-xBhfvtrYH2RlM1Ue5/view?usp=share_link" target="_blank" rel="noopener" style="color:var(--primary); font-weight:600">Uber ride-requests dataset</a>. Open in Jupyter or Colab.</span></label><label class="setup-item"><input type="checkbox"><span class="chk"></span><span class="setup-text">Load the data and run df.head(), df.info(), df.describe() so you're oriented to the columns.</span></label><label class="setup-item"><input type="checkbox"><span class="chk"></span><span class="setup-text">Bring your RCA — I notes — the CRIED life cycle is today's navigation map.</span></label>
+        <div class="progress"><div class="progress-bar" id="pbar"></div></div>
+        <div class="progress-txt" id="ptxt">0 of 3 done</div>
+      </div>
+    </section>
+
+    <footer>Scaler · Product Analytics Module · Lecture 5 Pre-Read</footer>
+  </div>
+
+<script>
+  // Make Your Move
+  var moves = Array.prototype.slice.call(document.querySelectorAll('.move'));
+  var reveal = document.getElementById('reveal');
+  var revealText = document.getElementById('reveal-text');
+  moves.forEach(function(btn){
+    btn.addEventListener('click', function(){
+      moves.forEach(function(m){ m.classList.remove('chosen'); m.classList.add('dim'); });
+      btn.classList.add('chosen'); btn.classList.remove('dim');
+      revealText.textContent = btn.getAttribute('data-reveal');
+      reveal.classList.add('show');
+    });
+  });
+
+  // Locked clue
+  var cbtn = document.getElementById('clue-btn');
+  var cbody = document.getElementById('clue-body');
+  cbtn.addEventListener('click', function(){
+    var open = cbody.classList.toggle('open');
+    cbtn.querySelector('.lock').textContent = open ? '🔓' : '🔒';
+    cbtn.querySelector('span:nth-child(2)').textContent = open ? 'Clue Unlocked' : 'Clue Locked';
+    cbtn.querySelector('.hintr').textContent = open ? '' : 'tap to unlock →';
+  });
+
+  // Topics accordion
+  document.querySelectorAll('.topic').forEach(function(t){
+    t.addEventListener('click', function(){
+      var open = t.getAttribute('aria-expanded') === 'true';
+      t.setAttribute('aria-expanded', open ? 'false' : 'true');
+    });
+  });
+
+  // Setup progress
+  var boxes = Array.prototype.slice.call(document.querySelectorAll('.setup-item input'));
+  var pbar = document.getElementById('pbar');
+  var ptxt = document.getElementById('ptxt');
+  function upd(){
+    var done = boxes.filter(function(b){return b.checked;}).length;
+    pbar.style.width = (done/boxes.length*100) + '%';
+    ptxt.textContent = done + ' of ' + boxes.length + ' done';
+  }
+  boxes.forEach(function(b){ b.addEventListener('change', upd); });
+</script>
+</body>
+</html>
